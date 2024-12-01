@@ -24,7 +24,7 @@ def verify_password(plain_password, hashed_password):
 
 async def create_access_token(data,  expiry: timedelta):
     payload = data.copy()
-    expire_in = datetime.utcnow() + expiry
+    expire_in = datetime.now(datetime.timezone.utc) + expiry
     payload.update({"exp": expire_in})
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 

@@ -16,4 +16,4 @@ app.add_middleware(AuthenticationMiddleware, backend=JWTAuth())
 
 @app.get('/')
 def health_check():
-    return JSONResponse(content={"status": " Service User is Running!"})
+    return JSONResponse(content={"status": "Welcome to Student Attendance API"})
