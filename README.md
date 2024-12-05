@@ -1,6 +1,6 @@
 # Student Attendance API
 
-This project was created as part of a final exam and serves as a small demonstration of our team’s work for the assignment. While it includes some features, it is not fully equipped for real-world applications. However, it can be used as a sample project for educational or academic purposes. Feel free to use it in your own projects at no cost. If you have suggestions for additional features, we welcome your contributions through a pull request to the repository at any time.
+This project was created as part of a final exam and serves as a small demonstration of our team's work for the assignment. While it includes some features, it is not fully equipped for real-world applications. However, it can be used as a sample project for educational or academic purposes. Feel free to use it in your own projects at no cost. If you have suggestions for additional features, we welcome your contributions through a pull request to the repository at any time.
 
 ## Frontend
 
@@ -10,5 +10,12 @@ This project was created as part of a final exam and serves as a small demonstra
 
 ## Installation
 
-`pip install -r requirements.txt`
+```
+pip install -r requirements.txt
+```
 
+## Run Server
+
+```
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```

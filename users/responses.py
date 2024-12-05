@@ -10,7 +10,7 @@ class BaseResponse(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
-    first_name: str
-    last_name: str
+    firstName: str
+    lastName: str
     email: EmailStr
-    registered_at: Union[None, datetime] = None
+    createdAt: Union[None, datetime] = None

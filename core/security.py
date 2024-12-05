@@ -1,8 +1,8 @@
 
-from passlib.context import CryptContext
+import bcrypt
 from fastapi.security import OAuth2PasswordBearer
 from starlette.authentication import AuthCredentials, UnauthenticatedUser
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from jose import jwt, JWTError
 from core.config import get_settings
 from fastapi import Depends
@@ -11,22 +11,26 @@ from users.models import UserModel
 
 settings = get_settings()
 
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    enPass = password.encode("utf-8")
+    hashed_password = bcrypt.hashpw(enPass, bcrypt.gensalt())
+    return hashed_password.decode("utf-8")
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password, hashed_password)
 
-
-async def create_access_token(data,  expiry: timedelta):
+async def create_access_token(data, expiry: timedelta):
     payload = data.copy()
-    expire_in = datetime.now(datetime.timezone.utc) + expiry
+    expire_in = datetime.now(timezone.utc) + expiry
     payload.update({"exp": expire_in})
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+async def sign_token(data):
+    expire_in = datetime.now(timezone.utc) + timedelta(days=1)
+    data.update({"exp": expire_in})
+    return jwt.encode(data, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 async def create_refresh_token(data):
     return jwt.encode(data, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)

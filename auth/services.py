@@ -1,10 +1,19 @@
+import os
+from dotenv import load_dotenv
+from my_utils.model_to_dict import model_to_dict
 from users.models import UserModel
 from fastapi.exceptions import HTTPException
-from core.security import verify_password
 from core.config import get_settings
 from datetime import timedelta
 from auth.responses import TokenResponse
-from core.security import create_access_token, create_refresh_token, get_token_payload
+from core.security import create_access_token, create_refresh_token, get_token_payload, sign_token, verify_password, get_password_hash
+from fastapi.responses import JSONResponse
+import shutil
+from pathlib import Path
+
+from users.responses import UserResponse
+env = Path(".") / ".env"
+load_dotenv(dotenv_path=env)
 
 settings = get_settings()
 
@@ -67,8 +76,6 @@ def _verify_user_access(user: UserModel):
             headers={"WWW-Authenticate": "Bearer"},
         )
         
-        
-        
 async def _get_user_token(user: UserModel, refresh_token = None):
     payload = {"id": user.id}
     
@@ -82,3 +89,35 @@ async def _get_user_token(user: UserModel, refresh_token = None):
         refresh_token=refresh_token,
         expires_in=access_token_expiry.seconds  # in seconds
     )
+        
+async def register_user(user, profileImg, db):
+    checkEmail = db.query(UserModel).filter(UserModel.email == user.email).first()
+    if checkEmail:
+        raise HTTPException(status_code=422, detail="This email address is already registered")
+    
+    new_user = UserModel(
+        firstName = user.firstName,
+        lastName = user.lastName,
+        email = user.email,
+        password = get_password_hash(user.password),
+        type = user.type,
+        status = 'A'
+    )
+
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Unable to register")
+    
+    if profileImg is not None:
+        Path(os.getenv('USER_PROFILE_PATH')).mkdir(parents=True, exist_ok=True)
+        path = Path(os.getenv('USER_PROFILE_PATH')) / f"{new_user.id}.png"
+        with path.open("wb") as buffer:
+            shutil.copyfileobj(profileImg.file, buffer)
+
+    new_user.password = None
+    
+    return await sign_token(model_to_dict(new_user))
