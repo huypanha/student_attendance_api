@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Depends, Header, File, UploadFile, Reques
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from core.database import get_db
-from auth.services import get_token, get_refresh_token, register_user
+from auth.services import get_token, get_refresh_token, login, register_user
 from users.responses import UserResponse
 from users.schemas import CreateUserRequest
 
@@ -23,5 +23,8 @@ async def refresh_access_token(refresh_token: str = Header(), db: Session = Depe
 @router.post("/register", status_code=status.HTTP_200_OK)
 async def register(data: Request, profileImg: UploadFile = File(None), db: Session = Depends(get_db)):
     user = CreateUserRequest.model_validate(dict(await data.form()))
-    print(user)
     return await register_user(user, profileImg, db)
+
+@router.post("/login", status_code=status.HTTP_200_OK)
+async def register(token: Request, db: Session = Depends(get_db)):
+    return await login(dict(await token.form()).get('token'), db)

@@ -19,7 +19,7 @@ def get_password_hash(password):
     return hashed_password.decode("utf-8")
 
 def verify_password(plain_password, hashed_password):
-    return bcrypt.checkpw(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 async def create_access_token(data, expiry: timedelta):
     payload = data.copy()

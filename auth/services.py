@@ -121,3 +121,14 @@ async def register_user(user, profileImg, db):
     new_user.password = None
     
     return await sign_token(model_to_dict(new_user))
+        
+async def login(token, db):
+    login_info = get_token_payload(token)
+    checkUser = db.query(UserModel).filter(UserModel.email == login_info['id']).first()
+    if not checkUser:
+        raise HTTPException(status_code=422, detail="Invalid credentials")
+    
+    if not verify_password(login_info['password'], checkUser.password):
+        raise HTTPException(status_code=422, detail="Incorrect password")
+    
+    return await sign_token(model_to_dict(checkUser))
