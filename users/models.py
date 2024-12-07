@@ -20,3 +20,6 @@ class UserModel(Base):
     updatedAt = Column(DateTime)
     lastActive = Column(DateTime, default=func.now()) 
     status = Column(CHAR(1), default='A')
+    
+    class Config:
+        orm_mode = True

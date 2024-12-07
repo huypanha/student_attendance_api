@@ -1,11 +1,11 @@
 CREATE TABLE "public"."users" (
-  "id" int4 NOT NULL DEFAULT nextval('users_id_seq'::regclass),
-  "stuId" varchar(255) COLLATE "pg_catalog"."default",
-  "firstName" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "lastName" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "email" varchar(255) COLLATE "pg_catalog"."default",
-  "password" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "phoneNumber" varchar(20) COLLATE "pg_catalog"."default",
+  "id" SERIAL PRIMARY KEY,
+  "stuId" varchar(255),
+  "firstName" varchar(255),
+  "lastName" varchar(255),
+  "email" varchar(255),
+  "password" varchar(255),
+  "phoneNumber" varchar(20),
   "dob" date,
   "type" int2 NOT NULL,
   "createdBy" int2,
@@ -13,6 +13,18 @@ CREATE TABLE "public"."users" (
   "createdAt" timestamp(6),
   "updatedAt" timestamp(6),
   "lastActive" timestamp(6),
-  "status" char(1) COLLATE "pg_catalog"."default" NOT NULL,
-  PRIMARY KEY ("id")
+  "status" char(1) NOT NULL
 )
+
+CREATE TABLE course (
+    id SERIAL PRIMARY KEY,
+    subject VARCHAR(255), 
+    teacherId INT,
+    description TEXT,
+    img VARCHAR(255),
+    createdBy INT,
+    createdAt TIMESTAMP,
+    updatedBy INT,
+    updatedAt TIMESTAMP,
+    status VARCHAR(50)
+);

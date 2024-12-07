@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr
-from datetime import date, datetime
 
 class CreateUserRequest(BaseModel):
     firstName: str
@@ -8,21 +7,14 @@ class CreateUserRequest(BaseModel):
     password: str
     type: int
 
-class UpdateUserRequest(BaseModel):
-    id: int
-    stuId: str
-    firstName: str
-    lastName: str
-    email: str
-    phoneNumber: str
-    dob: date
-    type: int
-    status: str | None
-    password: str | None
-
 class GetUserRequest(BaseModel):
-    type: int = None
-    types: list = None
+    first_name: str
+    last_name: str
+    email: EmailStr
+    password: str
+
+from pydantic import BaseModel
+from datetime import date, datetime
 
 class UserResponse(BaseModel):
     id: int

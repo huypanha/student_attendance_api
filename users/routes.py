@@ -1,31 +1,24 @@
-from fastapi import APIRouter, status, Depends, Request, File, UploadFile
-from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from typing import List
+from fastapi import APIRouter, Depends, File, Request, UploadFile
+from requests import Session
 from core.database import get_db
-from users.schemas import CreateUserRequest
-from users.services import create_user_account, get_user_account_by_email
-from core.security import oauth2_scheme
-from users.responses import UserResponse;
+from users.responses import UserResponseModel
+from users.services import delete_user, get_users, update_user
 
 router = APIRouter(
-    prefix="/users",
+    prefix="/api/v1/users",
     tags=["Users"],
-    responses={404: {"description": "Not found"}},
+    responses={404: {"description": "Unauthorized"}},
 )
 
-@router.post('', status_code=status.HTTP_201_CREATED)
-async def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
-    await create_user_account(data=data, db=db)
-    payload = {"message": "User account has been succesfully created."}
-    return JSONResponse(content=payload)
+@router.get('', response_model=list[UserResponseModel])
+async def get(request: Request, db: Session = Depends(get_db)):
+    return await get_users(data=await request.json(), db=db)
 
+@router.put('')
+async def update(data: Request, profileImg: UploadFile = File(None), db: Session = Depends(get_db)):
+    return await update_user(data, profileImg, db)
 
-@router.post('/me', status_code=status.HTTP_200_OK, response_model=UserResponse)
-def get_user_detail(request: Request):
-    return request.user
-
-# GET route to fetch user details by email
-@router.get('/users', status_code=status.HTTP_200_OK)
-async def get_user(email: str, db: Session = Depends(get_db)):
-    user = await get_user_account_by_email(email=email, db=db)
-    return user
+@router.delete('')
+async def delete(data: Request, db: Session = Depends(get_db)):
+    return await delete_user(data, db)

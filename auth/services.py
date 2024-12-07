@@ -7,11 +7,9 @@ from core.config import get_settings
 from datetime import timedelta
 from auth.responses import TokenResponse
 from core.security import create_access_token, create_refresh_token, get_token_payload, sign_token, verify_password, get_password_hash
-from fastapi.responses import JSONResponse
 import shutil
 from pathlib import Path
 
-from users.responses import UserResponse
 env = Path(".") / ".env"
 load_dotenv(dotenv_path=env)
 
@@ -130,5 +128,13 @@ async def login(token, db):
     
     if not verify_password(login_info['password'], checkUser.password):
         raise HTTPException(status_code=422, detail="Incorrect password")
-    
-    return await sign_token(model_to_dict(checkUser))
+
+    return await sign_token({
+        'id': checkUser.id,
+        'stuId': checkUser.stuId,
+        'firstName': checkUser.firstName,
+        'lastName': checkUser.lastName,
+        'email': checkUser.email,
+        'phoneNumber': checkUser.phoneNumber,
+        'type': checkUser.type
+    })

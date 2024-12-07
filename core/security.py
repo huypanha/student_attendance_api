@@ -1,17 +1,12 @@
 
 import bcrypt
-from fastapi.security import OAuth2PasswordBearer
-from starlette.authentication import AuthCredentials, UnauthenticatedUser
 from datetime import timedelta, datetime, timezone
 from jose import jwt, JWTError
 from core.config import get_settings
-from fastapi import Depends
 from core.database import get_db
 from users.models import UserModel
 
 settings = get_settings()
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 def get_password_hash(password):
     enPass = password.encode("utf-8")
@@ -44,7 +39,7 @@ def get_token_payload(token):
     return payload
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db = None):
+def get_current_user(token: str, db = None):
     payload = get_token_payload(token)
     if not payload or type(payload) is not dict:
         return None
@@ -58,23 +53,3 @@ def get_current_user(token: str = Depends(oauth2_scheme), db = None):
 
     user = db.query(UserModel).filter(UserModel.id == user_id).first()
     return user
-
-
-class JWTAuth:
-    
-    async def authenticate(self, conn):
-        guest = AuthCredentials(['unauthenticated']), UnauthenticatedUser()
-        
-        if 'authorization' not in conn.headers:
-            return guest
-        
-        token = conn.headers.get('authorization').split(' ')[1]  # Bearer token_hash
-        if not token:
-            return guest
-        
-        user = get_current_user(token=token)
-        
-        if not user:
-            return guest
-        
-        return AuthCredentials('authenticated'), user
