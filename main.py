@@ -5,10 +5,12 @@ import jwt
 from core.security import get_current_user
 from users.routes import router as guest_router
 from auth.route import router as auth_router
+from courses.routes import router as course_router
 
 app = FastAPI()
 app.include_router(guest_router)
 app.include_router(auth_router)
+app.include_router(course_router)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 

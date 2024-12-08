@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from requests import Session
 from core.database import get_db

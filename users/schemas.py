@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from datetime import date, datetime
 
 class CreateUserRequest(BaseModel):
@@ -40,6 +40,4 @@ class UserResponse(BaseModel):
     lastActive: datetime
     status: str
 
-    class Config:
-        orm_mode = True
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

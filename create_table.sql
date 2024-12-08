@@ -16,7 +16,7 @@ CREATE TABLE "public"."users" (
   "status" char(1) NOT NULL
 )
 
-CREATE TABLE course (
+CREATE TABLE "public"."courses" (
     id SERIAL PRIMARY KEY,
     subject VARCHAR(255), 
     teacherId INT,
@@ -27,4 +27,12 @@ CREATE TABLE course (
     updatedBy INT,
     updatedAt TIMESTAMP,
     status VARCHAR(50)
+);
+
+CREATE TABLE "public"."student_course" (
+  "stuId" INT NOT NULL,
+  "courseId" INT NOT NULL,
+  "joinDate" TIMESTAMP NOT NULL,
+  "createdBy" INT NOT NULL,
+  PRIMARY KEY ("stuId", "courseId")
 );

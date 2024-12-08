@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
+from datetime import date, datetime
 
 class CreateUserRequest(BaseModel):
     firstName: str
@@ -7,14 +8,21 @@ class CreateUserRequest(BaseModel):
     password: str
     type: int
 
-class GetUserRequest(BaseModel):
-    first_name: str
-    last_name: str
-    email: EmailStr
-    password: str
+class UpdateUserRequest(BaseModel):
+    id: int
+    stuId: str
+    firstName: str
+    lastName: str
+    email: str
+    phoneNumber: str
+    dob: date
+    type: int
+    status: str | None
+    password: str | None
 
-from pydantic import BaseModel
-from datetime import date, datetime
+class GetUserRequest(BaseModel):
+    type: int = None
+    types: list = None
 
 class UserResponse(BaseModel):
     id: int
@@ -32,6 +40,4 @@ class UserResponse(BaseModel):
     lastActive: datetime
     status: str
 
-    class Config:
-        orm_mode = True
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

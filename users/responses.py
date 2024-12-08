@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from typing import Optional, Union
 from datetime import date, datetime
 
@@ -24,5 +24,4 @@ class UserResponseModel(BaseModel):
     lastActive: Optional[datetime] = None
     status: Optional[str] = 'A'
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

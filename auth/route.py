@@ -3,7 +3,7 @@ from fastapi import APIRouter, status, Depends, Header, File, UploadFile, Reques
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from core.database import get_db
-from auth.services import get_token, get_refresh_token, login, register_user
+from auth.services import get_token, get_refresh_token, login_user, register_user
 from users.schemas import CreateUserRequest
 
 router = APIRouter(
@@ -26,5 +26,5 @@ async def register(data: Request, profileImg: UploadFile = File(None), db: Sessi
     return await register_user(user, profileImg, db)
 
 @router.post("/login")
-async def register(token: Request, db: Session = Depends(get_db)):
-    return await login(dict(await token.form()).get('token'), db)
+async def login(token: Request, db: Session = Depends(get_db)):
+    return await login_user(dict(await token.form()).get('token'), db)

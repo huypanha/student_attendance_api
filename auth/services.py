@@ -120,7 +120,7 @@ async def register_user(user, profileImg, db):
     
     return await sign_token(model_to_dict(new_user))
         
-async def login(token, db):
+async def login_user(token, db):
     login_info = get_token_payload(token)
     checkUser = db.query(UserModel).filter(UserModel.email == login_info['id']).first()
     if not checkUser:

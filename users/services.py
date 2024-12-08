@@ -46,12 +46,14 @@ async def get_user_account_by_email(email: str, db):
 async def get_users(data, db):
     getUser = db.query(UserModel)
 
-    if data['type'] is not None:
-        getUser = getUser.filter(UserModel.type == data['type'])
+    if data.get('id', None) is not None:
+        getUser = getUser.filter(UserModel.id == data.get('id', None))
 
-    if data['status'] is not None:
-        getUser = getUser.filter(UserModel.status == data['status'])
+    if data.get('type', None) is not None:
+        getUser = getUser.filter(UserModel.type == data.get('type', None))
 
+    if data.get('status', None) is not None:
+        getUser = getUser.filter(UserModel.status == data.get('status', None))
 
     getUser.order_by(UserModel.id.desc()).all()
 
@@ -98,7 +100,7 @@ async def delete_user(req, db):
     if id is None:
         raise HTTPException(status_code=400, detail="id is required")
     
-    checkUser = db.query(UserModel).filter( UserModel.id == id).first()
+    checkUser = db.query(UserModel).filter(UserModel.id == id).first()
     if not checkUser:
         raise HTTPException(status_code=422, detail="Not found")
     
@@ -112,4 +114,4 @@ async def delete_user(req, db):
         db.rollback()
         raise HTTPException(status_code=500, detail="Unable to delete user")
     
-    return JSONResponse(content="Updated sucessfully")
+    return JSONResponse(content="Deleted sucessfully")
