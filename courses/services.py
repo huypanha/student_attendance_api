@@ -2,14 +2,11 @@ import json
 import os
 from pathlib import Path
 import shutil
-from typing import Optional
 from dotenv import load_dotenv
-from fastapi import File, UploadFile
 from fastapi.responses import JSONResponse
 from sqlalchemy import func
 from courses.models import CourseModel, StudentCourseModel
 from courses.responses import CourseResponseModel
-from users.models import UserModel
 from fastapi.exceptions import HTTPException
 from datetime import datetime
 
@@ -171,6 +168,11 @@ async def delete_course(req, db):
         raise HTTPException(status_code=500, detail="Unable to delete course")
     
     return JSONResponse(content="Deleted sucessfully")
+
+
+async def get_only_courses_by_id(db, id):
+    getData = db.query(CourseModel).filter(CourseModel.id == id).first()
+    return getData
 
 
 

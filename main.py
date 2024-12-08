@@ -3,14 +3,16 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 import jwt
 from core.security import get_current_user
-from users.routes import router as guest_router
+from users.routes import router as user_router
 from auth.route import router as auth_router
 from courses.routes import router as course_router
+from schedule.routes import router as schedule_router
 
 app = FastAPI()
-app.include_router(guest_router)
+app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(course_router)
+app.include_router(schedule_router)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
@@ -19,6 +21,7 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 async def jwt_middleware(request: Request, call_next):
     print(request.url.path)
     allowed_paths = [
+        "/",
         "/api/v1/auth/login",
         "/api/v1/auth/register",
         "/docs",
@@ -46,5 +49,5 @@ async def jwt_middleware(request: Request, call_next):
     return await call_next(request)
 
 @app.get('/')
-def health_check():
+def index():
     return JSONResponse(content={"status": "Welcome to Student Attendance API"})

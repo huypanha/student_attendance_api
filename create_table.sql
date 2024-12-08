@@ -17,16 +17,16 @@ CREATE TABLE "public"."users" (
 )
 
 CREATE TABLE "public"."courses" (
-    id SERIAL PRIMARY KEY,
-    subject VARCHAR(255), 
-    teacherId INT,
-    description TEXT,
-    img VARCHAR(255),
-    createdBy INT,
-    createdAt TIMESTAMP,
-    updatedBy INT,
-    updatedAt TIMESTAMP,
-    status VARCHAR(50)
+  "id" SERIAL PRIMARY KEY,
+  "subject" VARCHAR(255), 
+  "teacherId" INT,
+  "description" TEXT,
+  "img" VARCHAR(255),
+  "createdBy" INT,
+  "createdAt" TIMESTAMP,
+  "updatedBy" INT,
+  "updatedAt" TIMESTAMP,
+  "status" VARCHAR(50)
 );
 
 CREATE TABLE "public"."student_course" (
@@ -35,4 +35,14 @@ CREATE TABLE "public"."student_course" (
   "joinDate" TIMESTAMP NOT NULL,
   "createdBy" INT NOT NULL,
   PRIMARY KEY ("stuId", "courseId")
+);
+
+CREATE TABLE "public"."schedule" (
+  "id" SERIAL PRIMARY KEY,
+  "startTime" TIMESTAMP NOT NULL,
+  "endTime" TIMESTAMP NOT NULL,
+  "courseId" INT NOT NULL,
+  "colorCode" VARCHAR(10) NOT NULL,
+  "createdBy" INT NOT NULL,
+  "createdDate" TIMESTAMP NOT NULL
 );
