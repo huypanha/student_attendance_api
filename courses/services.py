@@ -62,6 +62,9 @@ async def get_courses(db, data):
     if data.get('teacherId', None) is not None:
         getData = getData.filter(CourseModel.teacherId == data.get('teacherId', None))
 
+    if data.get('id', None) is not None:
+        getData = getData.filter(CourseModel.id == data['id'])
+
     getData.order_by(CourseModel.id.desc()).all()
 
     results = []
@@ -209,3 +212,7 @@ async def delete_student_course_by_course_id(db, course_id):
         print(e)
         db.rollback()
         raise HTTPException(status_code=500, detail="Unable to delete user")
+    
+async def get_course_by_student_id(db, stuId):
+    getData = db.query(StudentCourseModel).filter(StudentCourseModel.stuId == stuId).all()
+    return getData

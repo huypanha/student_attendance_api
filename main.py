@@ -7,12 +7,16 @@ from users.routes import router as user_router
 from auth.route import router as auth_router
 from courses.routes import router as course_router
 from schedule.routes import router as schedule_router
+from attendances.routes import router as att_router
+from dashboard.routes import router as dashboard_router
 
 app = FastAPI()
 app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(course_router)
 app.include_router(schedule_router)
+app.include_router(att_router)
+app.include_router(dashboard_router)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 

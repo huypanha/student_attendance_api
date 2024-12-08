@@ -1,6 +1,6 @@
 import json
 from fastapi.responses import JSONResponse
-from courses.services import get_only_courses_by_id
+from courses.services import get_courses, get_only_courses_by_id
 from schedule.models import ScheduleModel
 from schedule.schemas import ScheduleResponseModel
 from fastapi.exceptions import HTTPException
@@ -34,7 +34,9 @@ async def get_schedule(db, req):
 
     results = []
     for s in getData:
-        c = await get_only_courses_by_id(db, s.courseId)
+        c = (await get_courses(db, {
+            "id": s.courseId,
+        }))[0]
         
         updated_data = ScheduleResponseModel(
             id = s.id,

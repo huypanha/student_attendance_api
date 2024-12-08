@@ -76,7 +76,7 @@ async def update_user(req, profileImg, db):
     new_user.updatedAt = func.now()
     new_user.updatedBy = req.state.user.id
 
-    if user.password is not None:
+    if user.password != '':
         new_user.password = get_password_hash(user.password)
 
     try:

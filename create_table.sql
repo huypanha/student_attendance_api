@@ -46,3 +46,11 @@ CREATE TABLE "public"."schedule" (
   "createdBy" INT NOT NULL,
   "createdDate" TIMESTAMP NOT NULL
 );
+
+CREATE TABLE "public"."attendances" (
+  "id" SERIAL NOT NULL PRIMARY KEY,
+  "stuId" INT NOT NULL,
+  "courseId" INT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL,
+  "type" SMALLINT NOT NULL
+);
